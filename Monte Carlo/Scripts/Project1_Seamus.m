@@ -152,14 +152,21 @@ availability_factor = Fb-Fa %Worse, always lower than
 %% Del 3
 
 %% Monte Carlo grejs
-N = 10^4
+f = @(x) wblpdf(x, 9.13, 1.96);
+F = @(x) wblcdf(x, 9.13, 1.96);
+p = 3;
+q = 1.5;
+alpha = 0.638;
+fvec = @(v1, v2) f(v1)*f(v2)*(1+alpha*(1-F(v1)^p)^(q-1)*(1-F(v2)^p)^(q-1)*(F(v1)^p*(1+p*q)-1)*(F(v2)^p*(1+p*q)-1));
 
-for i=1:N
-    
-    rand
-    
+x = linspace(0,30, 100);
+sur = zeros(length(x), length(x));
+for j = 1:length(x)
+    for i = 1:length(x)
+        sur(i, j) = fvec(x(j),x(i));
+    end
 end
 
+surf(x, x, sur) %peak at 0.012
 
-
-
+%%
