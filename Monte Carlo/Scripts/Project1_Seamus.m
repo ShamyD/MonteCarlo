@@ -163,7 +163,7 @@ x = linspace(0,30, 100);
 sur = zeros(length(x), length(x));
 for j = 1:length(x)
     for i = 1:length(x)
-        sur(i, j) = fvec(x(j),x(i))*(P(x(j)) + P(x(i)));
+        sur(i, j) = fvec(x(j),x(i));%*(P(x(j)) + P(x(i)));
     end
 end
 
@@ -219,7 +219,7 @@ tau_sum
 %I = 2*(1.96/sqrt(N)).*sigma;
 
 %% Uppgift 3A, simulera rektangel
-N=100000;
+N=10^4;
 
 prod = zeros(N,1);
 points = rand([N,2]);
@@ -236,5 +236,33 @@ tau_sum
 
 %sigma = std(power);
 %I = 2*(1.96/sqrt(N)).*sigma;
+
+%% Covariance of sum
+
+
+x = linspace(0,30, 100);
+
+% sur = zeros(length(x), length(x));
+% for j = 1:length(x)
+%     for i = 1:length(x)
+%         sur(i, j) = fvec(x(j),x(i));%/(0.5333*mvnpdf([x(j) x(i)], [12 12], [7 0;0 7]));
+%     end
+% end
+
+% surf(x, x, sur)
+
+N=10^4;
+count = 0;
+V = zeros(N,2);
+C = zeros(N,1);
+while count<N
+  X = rand(1,2)*25;
+  U = rand();
+  if U <= fvec(X(1), X(2))/(0.013) %K and g cancel
+      V(count+1, :) = X;
+      C(count+1) = cov(P(X(1), X(2)));
+      count = count + 1
+  end
+end
 
 
