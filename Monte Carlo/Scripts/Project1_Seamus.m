@@ -148,3 +148,18 @@ availability_factor = Fb-Fa %Worse, always lower than
 
 
 %IS bättre än AS?
+
+%% Del 3
+
+%% Monte Carlo grejs
+N = 10^4
+
+for i=1:N
+    
+    rand
+    
+end
+
+
+
+
