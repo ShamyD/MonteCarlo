@@ -163,10 +163,78 @@ x = linspace(0,30, 100);
 sur = zeros(length(x), length(x));
 for j = 1:length(x)
     for i = 1:length(x)
-        sur(i, j) = fvec(x(j),x(i));
+        sur(i, j) = fvec(x(j),x(i))*(P(x(j)) + P(x(i)));
     end
 end
 
 surf(x, x, sur) %peak at 0.012
 
 %%
+N=10000;
+
+sur = mvnrnd([12 12], [7 0;0 7], N);
+
+scatter(sur(:,1), sur(:,2))
+
+%%
+
+x = linspace(0,30, 100);
+
+sur = zeros(length(x), length(x));
+for j = 1:length(x)
+    for i = 1:length(x)
+        sur(i, j) = mvnpdf([x(j) x(i)], [12 12], [7 0;0 7]);
+    end
+end
+
+surf(x, x, sur) %peak at 0.012
+
+%%
+
+x = linspace(3,30, 100);
+
+sur = zeros(length(x), length(x));
+for j = 1:length(x)
+    for i = 1:length(x)
+        sur(i, j) = fvec(x(j),x(i))*(P(x(j)) + P(x(i)))/mvnpdf([x(j) x(i)], [12 12], [7 0;0 7]);
+    end
+end
+
+surf(x, x, sur) %peak at 0.012
+%% Uppgift 3A, simulera
+N=10000;
+points = mvnrnd([12 12], [7 0;0 7], N);
+
+prod = zeros(N,1);
+
+for i=1:length(points)
+    prod(i) = fvec(points(i,1),points(i,2))*(P(points(i,1)) + P(points(i,2)))/mvnpdf([points(i,1) points(i,2)], [12 12], [7 0;0 7]);
+end
+
+
+tau_sum = sum(prod)/N; %sums the columns ie the different samples
+tau_sum
+
+%sigma = std(power);
+%I = 2*(1.96/sqrt(N)).*sigma;
+
+%% Uppgift 3A, simulera rektangel
+N=100000;
+
+prod = zeros(N,1);
+points = rand([N,2]);
+points = points.*(25-3.5) + 3.5;
+
+for i=1:N
+    
+    prod(i) = fvec(points(i,1),points(i,2))*(P(points(i,1)) + P(points(i,2)))*(25-3.5)^2;
+end
+
+
+tau_sum = sum(prod)/N; %sums the columns ie the different samples
+tau_sum
+
+%sigma = std(power);
+%I = 2*(1.96/sqrt(N)).*sigma;
+
+
