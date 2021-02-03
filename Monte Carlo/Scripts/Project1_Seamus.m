@@ -25,6 +25,7 @@ sigma = std(power);
 I = 2*(1.96/sqrt(N)).*sigma;
 
 %% Monte Carlo on Truncated distribution
+%Probably wrong interval 
 N = 10^4;
 Fb = wblcdf(25, lambda, k);
 Fa = wblcdf(3.5, lambda, k);
@@ -55,7 +56,7 @@ for i=1:N
 end
 
 tau_ntIS = sum(power_t)./N;
-tau_ntIS
+tau_ntIS;
 
 sigma_tIS = std(power_t);
 I_tIS = 2*(1.96./sqrt(N)).*sigma_tIS
@@ -148,6 +149,7 @@ availability_factor = Fb-Fa %Worse, always lower than
 
 
 %IS bättre än AS?
+%Rektangelfördelning på inte hela def-mängd?
 
 %% Del 3
 
@@ -237,8 +239,9 @@ tau_sum
 %sigma = std(power);
 %I = 2*(1.96/sqrt(N)).*sigma;
 
-%% Covariance with rejection sampling
-
+%% Covariance with rejection sampling (AND Variance of sum)
+%Bias in estimate due to sampling from only part of set, however the part
+%is a CLEAR majority
 
 x = linspace(0,30, 100);
 
@@ -254,21 +257,51 @@ x = linspace(0,30, 100);
 N=10^4;
 count = 0;
 V = zeros(N,2);
-% C = zeros(N,1);
+P1 = zeros(N,1);
+P2 = zeros(N,1);
+Psum = zeros(N,1);
 while count<N
+  i = count+1;
   X = rand(1,2)*25;
   U = rand();
   if U <= fvec(X(1), X(2))/(0.013) %K and g cancel
       V(count+1, :) = X;
+      P1(i) = P(V(i,1));
+      P2(i) = P(V(i,2));
+      Psum(i) = P1(i)+P2(i);
       count = count + 1
   end
 end
 
-P1 = zeros(N,1);
-P2 = zeros(N,1);
-for i=1:N
-    P1(i) = P(V(i,1));
-    P2(i) = P(V(i,2));
-end
-C = cov(P1, P2);
+C = cov(P1, P2); %variance similar
 C
+Var = var(Psum)
+Std = sqrt(Var)
+
+%% P(Ptot < 9.5)
+
+N = 10^4;
+
+count = 0;
+V = zeros(N,2);
+fi = zeros(N,1);
+Psum = zeros(N,1);
+while count<N
+  i = count+1;
+  X = rand(1,2)*25;
+  U = rand();
+  if U <= fvec(X(1), X(2))/(0.013) %K and g cancel
+      V(count+1, :) = X;
+      Psum(i) = P(V(i,1))+P(V(i,2));
+      if Psum(i) > 9.5e6
+          fi(i) = 1;
+      end
+      
+      count = count + 1
+  end
+end
+
+prob = mean(fi)
+var_fi = var(fi)
+Iprob = 2*norminv(0.975)*sqrt(var_fi)/sqrt(N)
+
