@@ -237,7 +237,7 @@ tau_sum
 %sigma = std(power);
 %I = 2*(1.96/sqrt(N)).*sigma;
 
-%% Covariance of sum
+%% Covariance with rejection sampling
 
 
 x = linspace(0,30, 100);
@@ -254,15 +254,21 @@ x = linspace(0,30, 100);
 N=10^4;
 count = 0;
 V = zeros(N,2);
-C = zeros(N,1);
+% C = zeros(N,1);
 while count<N
   X = rand(1,2)*25;
   U = rand();
   if U <= fvec(X(1), X(2))/(0.013) %K and g cancel
       V(count+1, :) = X;
-      C(count+1) = cov(P(X(1), X(2)));
       count = count + 1
   end
 end
 
-
+P1 = zeros(N,1);
+P2 = zeros(N,1);
+for i=1:N
+    P1(i) = P(V(i,1));
+    P2(i) = P(V(i,2));
+end
+C = cov(P1, P2);
+C
