@@ -95,6 +95,7 @@ my = x(I);
 
 n = @(y) normpdf(y, my, 5);
 % plot(x, M*n(x)/n(my))
+
 %% Antithetic sampling
 N = 10^4;
 Fb = wblcdf(25, lambda, k);
@@ -102,7 +103,7 @@ Fa = wblcdf(3.5, lambda, k);
 
 for i=1:N/2
     U = rand(1, 12);
-    Uhat = 1-U;
+    Uhat = 1-U;%T(U)
     prob1 = U.*(Fb-Fa)+Fa;
     prob2 = Uhat.*(Fb-Fa)+Fa;
     V1 = P(wblinv(prob1, lambda, k))'.*(Fb-Fa);
@@ -116,6 +117,10 @@ I_AS = 2*norminv(0.975)*std(power)/sqrt(N/2);
 
 tau_AS
 I_AS
+
+%% Prob(P(V)>0)
+Fb - Fa
+
 
 %% E(Ptot)
 Ptot = @(x) (1/8)*1.225*pi*(164^2)*(x.^3);
@@ -150,6 +155,7 @@ availability_factor = Fb-Fa %Worse, always lower than
 
 %IS bättre än AS?
 %Rektangelfördelning på inte hela def-mängd?
+%Antithetic higher variance than normal monte carlo
 
 %% Del 3
 
@@ -161,11 +167,11 @@ q = 1.5;
 alpha = 0.638;
 fvec = @(v1, v2) f(v1)*f(v2)*(1+alpha*(1-F(v1)^p)^(q-1)*(1-F(v2)^p)^(q-1)*(F(v1)^p*(1+p*q)-1)*(F(v2)^p*(1+p*q)-1));
 
-x = linspace(0,30, 100);
+x = linspace(0,50, 100);
 sur = zeros(length(x), length(x));
 for j = 1:length(x)
     for i = 1:length(x)
-        sur(i, j) = fvec(x(j),x(i));%*(P(x(j)) + P(x(i)));
+        sur(i, j) = (P(x(j)) + P(x(i)));%fvec(x(j),x(i));
     end
 end
 
@@ -193,12 +199,12 @@ surf(x, x, sur) %peak at 0.012
 
 %%
 
-x = linspace(3,30, 100);
-
+x = linspace(0,40, 100);
+norm_variance = 7;%7
 sur = zeros(length(x), length(x));
 for j = 1:length(x)
     for i = 1:length(x)
-        sur(i, j) = fvec(x(j),x(i))*(P(x(j)) + P(x(i)))/mvnpdf([x(j) x(i)], [12 12], [7 0;0 7]);
+        sur(i, j) = fvec(x(j),x(i))*(P(x(j)) + P(x(i)))/mvnpdf([x(j) x(i)], [12 12], [norm_variance 0;0 norm_variance]);
     end
 end
 
