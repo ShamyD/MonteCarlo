@@ -123,19 +123,22 @@ Fb - Fa
 
 
 %% E(Ptot)
-Ptot = @(x) (1/8)*1.225*pi*(164^2)*(x.^3);
+% Ptot = @(x) (1/8)*1.225*pi*(164^2)*(x.^3);
+% 
+% N = 10^4;
+% 
+% for i = 1:N
+%    pow(i,:) = Ptot(wblrnd(lambda, k));
+% end
+% 
+% E = mean(pow); %E is meant to be produced analytically
 
-N = 10^4;
+EPtot_prim = @(v) (1/8)*1.225*pi*(164^2) * lambda .* exp(-v./k) .* (-k*v - 3*k.^2*v^2 - 6*k.^3*v - 6*k.^4);
+EPtot = EPtot_prim(25) - EPtot_prim(3.5)
 
-for i = 1:N
-   pow(i,:) = Ptot(wblrnd(lambda, k));
-end
-
-E = mean(pow); %E is meant to be produced analytically
-
-kvot = tau_nis./E; %IS gave the best result
-I = I_is/E;
-I;
+kvot = tau_nis./EPtot; %IS gave the best result
+Ikv = I_is./EPtot;
+Ikv
 
 %% Capacity and Availablity
 
