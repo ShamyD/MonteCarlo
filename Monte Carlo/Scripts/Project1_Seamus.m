@@ -56,7 +56,7 @@ for i=1:N
 end
 
 tau_ntIS = sum(power_t)./N;
-tau_ntIS;
+tau_ntIS
 
 sigma_tIS = std(power_t);
 I_tIS = 2*(1.96./sqrt(N)).*sigma_tIS
@@ -127,19 +127,23 @@ Fb - Fa
 
 
 %% E(Ptot)
-Ptot = @(x) (1/8)*1.225*pi*(164^2)*(x.^3);
+%% E(Ptot)
+% Ptot = @(x) (1/8)*1.225*pi*(164^2)*(x.^3);
+% 
+% N = 10^4;
+% 
+% for i = 1:N
+%    pow(i,:) = Ptot(wblrnd(lambda, k));
+% end
+% 
+% E = mean(pow); %E is meant to be produced analytically
 
-N = 10^4;
+EPtot_prim = @(v) (1/8)*1.225*pi*(164^2) * lambda .* exp(-v./k) .* (-k*v - 3*k.^2*v^2 - 6*k.^3*v - 6*k.^4);
+EPtot = EPtot_prim(25) - EPtot_prim(3.5)
 
-for i = 1:N
-   pow(i,:) = Ptot(wblrnd(lambda, k));
-end
-
-E = mean(pow); %E is meant to be produced analytically
-
-kvot = tau_nis./E; %IS gave the best result
-I = I_is/E;
-I;
+kvot = tau_nis./EPtot; %IS gave the best result
+Ikv = I_is./EPtot;
+Ikv
 
 %% Capacity and Availablity
 
@@ -338,7 +342,8 @@ tau_sum = 2*tau_nis2;
 
 %% 3b-c
 f = @(x) wblpdf(x, lambda, k);
-
+a = 3.5;
+b = 25;
 
 N = 10^4;
 Pprod = zeros(N,1);
@@ -408,3 +413,25 @@ end
 
 prob95g = mean(Pg95)
 prob95l = 1 - prob95g - tot_prob95
+
+%% 3d sampling from R2+
+N = 10^4;
+g = @(x) wblpdf(x, lambda, k);
+V = wblrnd(lambda, k, N, 2);
+
+Psumfi = zeros(N,2); %k1:greater than
+
+for i = 1:N
+    if P(V(i, 1)) + P(V(i,2)) > 9.5e6
+        Psumfi(i, 1) = fvec(V(i,1), V(i,2))/(g(V(i,1))*g(V(i,2)));
+    elseif P(V(i, 1)) + P(V(i,2)) < 9.5e6
+        Psumfi(i, 2) = fvec(V(i,1), V(i,2))/(g(V(i,1))*g(V(i,2)));
+    end
+end
+
+pgreat = mean(Psumfi(:,1))
+pless = mean(Psumfi(:,2))
+diff = 1 - pgreat - pless 
+
+Iplus = 2*norminv(0.975)*sqrt(pgreat*(1-pgreat)/N)
+Iminus = 2*norminv(0.975)*sqrt(pless*(1-pless)/N)
