@@ -65,6 +65,7 @@ I_tIS = 2*(1.96./sqrt(N)).*sigma_tIS
 N = 10^4;
 s = 5; %THIS CAN BE OPTIMISED ()
 my = 12;
+value = zeros(N,12);
 
 for i=1:N
    X = normrnd(my, s, 1, 12);
@@ -118,27 +119,27 @@ I_AS = 2*norminv(0.975)*std(power)/sqrt(N/2);
 tau_AS
 I_AS
 
+tau_n
+I
+
 %% Prob(P(V)>0)
 Fb - Fa
 
 
 %% E(Ptot)
-% Ptot = @(x) (1/8)*1.225*pi*(164^2)*(x.^3);
-% 
-% N = 10^4;
-% 
-% for i = 1:N
-%    pow(i,:) = Ptot(wblrnd(lambda, k));
-% end
-% 
-% E = mean(pow); %E is meant to be produced analytically
+Ptot = @(x) (1/8)*1.225*pi*(164^2)*(x.^3);
 
-EPtot_prim = @(v) (1/8)*1.225*pi*(164^2) * lambda .* exp(-v./k) .* (-k*v - 3*k.^2*v^2 - 6*k.^3*v - 6*k.^4);
-EPtot = EPtot_prim(25) - EPtot_prim(3.5)
+N = 10^4;
 
-kvot = tau_nis./EPtot; %IS gave the best result
-Ikv = I_is./EPtot;
-Ikv
+for i = 1:N
+   pow(i,:) = Ptot(wblrnd(lambda, k));
+end
+
+E = mean(pow); %E is meant to be produced analytically
+
+kvot = tau_nis./E; %IS gave the best result
+I = I_is/E;
+I;
 
 %% Capacity and Availablity
 
@@ -212,7 +213,7 @@ for j = 1:length(x)
 end
 
 surf(x, x, sur) %peak at 0.012
-%% Uppgift 3A, simulera
+%% Uppgift 3A, simulera - IRRELEVANT
 N=10000;
 points = mvnrnd([12 12], [7 0;0 7], N);
 
@@ -229,7 +230,7 @@ tau_sum
 %sigma = std(power);
 %I = 2*(1.96/sqrt(N)).*sigma;
 
-%% Uppgift 3A, simulera rektangel
+%% Uppgift 3A, simulera rektangel - IRRELEVANT
 N=10^4;
 
 prod = zeros(N,1);
@@ -248,7 +249,7 @@ tau_sum
 %sigma = std(power);
 %I = 2*(1.96/sqrt(N)).*sigma;
 
-%% Covariance with rejection sampling (AND Variance of sum)
+%% Covariance with rejection sampling (AND Variance of sum) - IRRELEVANT
 %Bias in estimate due to sampling from only part of set, however the part
 %is a CLEAR majority
 
@@ -287,7 +288,7 @@ C
 Var = var(Psum)
 Std = sqrt(Var)
 
-%% P(Ptot < 9.5)
+%% P(Ptot < 9.5) - IRRELEVANT
 
 N = 10^4;
 
@@ -314,3 +315,96 @@ prob = mean(fi)
 var_fi = var(fi)
 Iprob = 2*norminv(0.975)*sqrt(var_fi)/sqrt(N)
 
+%% 3a
+%a E(P(v1) + P(v2)) = E(P(v1)) + E(P(v2)) = tau_nis
+%Behlver nya k och lambda
+
+lambda = 9.13;
+k = 1.96;
+
+N = 10^4;
+s = 5; %THIS CAN BE OPTIMISED ()
+my = 12;
+value = zeros(N,1);
+
+for i=1:N
+   X = normrnd(my, s, 1);
+   value(i) = wblpdf(X, lambda, k).*P(X)'./normpdf(X, my, s);
+end
+
+tau_nis2 = sum(value)/N;
+tau_sum = 2*tau_nis2;   
+
+
+%% 3b-c
+f = @(x) wblpdf(x, lambda, k);
+
+
+N = 10^4;
+Pprod = zeros(N,1);
+C = zeros(N,1);
+V = rand(N,2)*(b-a) +a;
+P2 = zeros(N,1);
+
+for i=1:N
+    Pprod(i) = P(V(i,1))*P(V(i,2))*f(V(i,1))*fvec(V(i,1),V(i,2))*(b-a)^2;
+    P2(i) = P(V(i,1))^2*f(V(i,1))*(b-a); %calc 3c
+    C(i) = f(V(i,1))*fvec(V(i,1), V(i,2))*(b-a)^2; %Probably not nececarry
+end %Should try not to divide up
+
+P1P2 = mean(Pprod)/mean(C);
+
+covariance = P1P2 - tau_nis2^2;
+
+Ep2 = mean(P2);
+varp = (Ep2 - tau_nis2^2);
+varsum = 2*varp + 2*covariance;%result 3c
+stdsum = sqrt(varsum);%result 3c
+
+%% Plot 3d
+
+x = linspace(25, 100, 100);
+func = zeros(length(x), 1);
+v2 = 14;
+for i = 1:length(x)
+func(i) = fvec(x(i), v2)/(2*normpdf(x(i), 25, 6));
+end
+plot(x, func)
+
+%% Psum = 9.5
+N = 10^4;
+v1 = rand(N, 1)*(25-14)+14;
+m = 14;
+sig = 6;
+v2 = normrnd(m, sig, N, 1);
+for i =1:N %flip normal dist
+    v = v2(i);
+    if v < m
+        v2(i) = 2*m - v;
+    end
+end
+
+p95 = zeros(N,1);
+for i = 1:N
+    p95 = fvec(v1(i), v2(i))*(25-14)/(2*normpdf(v2(i), m, sig));
+end
+
+prob95 = mean(p95);
+tot_prob95 = 2*prob95
+
+%% 3d
+N = 10^4;
+a = 3.5;
+b = 25;
+V = rand(N, 2)*(b-a)+a;
+Pg95 = zeros(N,1);
+
+for i = 1:N
+    psum = P(V(i,1)) + P(V(i,2));
+    if psum > 9.5
+        Pg95(i) = fvec(V(i,1), V(i,2))*(b-a)^2;
+    end
+end
+
+prob95g = mean(Pg95)
+prob95l = 1 - prob95g - tot_prob95
