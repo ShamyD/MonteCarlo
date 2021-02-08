@@ -12,6 +12,7 @@ k = [2.0, 2.0, 2.0, 1.9, 1.9, 1.9, 1.9, 1.9, 2.0, 1.9, 2.0, 2.0];
 V = wblrnd(lambda, k)
 %% Standard Monte Carlo
 N = 10^4;
+power = zeros(N,12);
 
 for i=1:N
     power(i,:) = P(wblrnd(lambda, k));
