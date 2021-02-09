@@ -125,7 +125,7 @@ I
 
 %% Prob(P(V)>0)
 Fb - Fa
-
+mean(Fb-Fa)
 
 %% E(Ptot)
 %% E(Ptot)
@@ -140,12 +140,12 @@ Fb - Fa
 % E = mean(pow); %E is meant to be produced analytically
 
 EPtot_prim = @(v) (1/8)*1.225*pi*(164^2) * lambda .* exp(-v./k) .* (-k*v - 3*k.^2*v^2 - 6*k.^3*v - 6*k.^4);
-EPtot = EPtot_prim(25) - EPtot_prim(3.5)
+EPtot = - EPtot_prim(0)
 
 kvot = tau_nis./EPtot; %IS gave the best result
 Ikv = I_is./EPtot;
 Ikv
-
+mean(kvot)
 %% Capacity and Availablity
 
 tau = tau_nis;
