@@ -142,3 +142,18 @@ ylabel('\phi(v)f(v)/norm(v)')
 % 
 % n = @(y) normpdf(y, my, 5);
 % plot(x, M*n(x)/n(my))
+
+
+
+%%
+l = 10.6;
+k = 2;
+
+W = @(x) 1 - exp(-(x/l).^k);
+F = @(x) l(1-exp(-x)).^(1/k);
+
+x = linspace(0,40, 100);
+
+plot(x, W(x))
+hold on
+plot(x, F(x))
