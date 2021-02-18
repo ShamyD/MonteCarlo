@@ -1,7 +1,5 @@
 function [free_steps] = getFreeStep(N,d,prev_points, free_nb, nr_free_nb)
     
-    % transpose
-    % free_nb_t = free_nb';
     
     which_nb = ceil(rand(N,1).*nr_free_nb);
     which_nb = (which_nb*2 - 1);

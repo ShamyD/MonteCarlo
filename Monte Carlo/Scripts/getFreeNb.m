@@ -27,9 +27,11 @@ function [free_nb, nr_free_nb] = getFreeNb(walks, N, d)
             nb_is_same(:,col) = members;
         end
         
-        nb_ok_temp = sum(nb_is_same')';
+        nb_ok_temp = sum(nb_is_same',1)';
+        
         %nb_ok has 1s when the point is unvisited and zeros otherwise.
         nb_ok = nb_ok_temp==0;
+        
         poss_dir(:,dir*d-1:dir*d) = repmat(nb_ok,1,2);        
     end
     nr_free_nb = sum(poss_dir')'./2;
