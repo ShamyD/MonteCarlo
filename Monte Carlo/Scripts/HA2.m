@@ -83,12 +83,18 @@ N=10000;
 n = 10;
 d = 2;
 walks = zeros(N,d*(n + 1));
-N_tot = ones(N,n);
 weight = 4*ones(N,n);
 result = ones(1,n);
 
 for c = 1:n
-    c
+    
+    if c ~= 0
+        mult = resampling(weight(:, c));
+        matr = multToMatr(mult);
+        walks = matr*walks;
+        N_tot = matr*N_tot;
+    end
+    
     % Get which free nb:s there are and how many (for all walks).
     [free_nb, nr_free_nb] = getFreeNb(walks(:,1:d*c),N,d);
     
@@ -98,15 +104,21 @@ for c = 1:n
     walks(:,d*c + 1:d*c + d) = new_col;
     
     % calculate weights
-    N_tot(:, c) = nr_free_nb;
+    %N_tot(:, c) = nr_free_nb;
     if c>1
-        weight(:,c) = nr_free_nb.*weight(:,c-1);
+        weight(:,c) = nr_free_nb;
     end
     
  
     
 end
 
-result = sum(weight,1)/N
+result = sum(weight,1)/N;
 
+c_cum = ones(1, n);
+c_cum(1,1) = result(1,1);
+for i = 2:n
+    c_cum(1,i) = c_cum(1,i-1)*result(1,i);
+end
 
+c_cum
