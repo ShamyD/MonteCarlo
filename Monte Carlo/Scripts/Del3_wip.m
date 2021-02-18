@@ -177,6 +177,14 @@ tau_sum = 2*tau_nis2;
 f = @(x) wblpdf(x, lambda, k);
 a = 3.5;
 b = 25;
+p = 3;
+q = 1.5;
+alpha = 0.638;
+
+fvec = @(v1, v2) f(v1)*f(v2)*(1+alpha*(1-F(v1)^p)^(q-1)*(1-F(v2)^p)^(q-1)*(F(v1)^p*(1+p*q)-1)*(F(v2)^p*(1+p*q)-1));
+
+lambda = 9.13;
+k = 1.96;
 
 N = 10^4;
 Pprod = zeros(N,1);
@@ -245,7 +253,7 @@ for i = 1:N
 end
 
 prob95g = mean(Pg95)
-prob95l = 1 - prob95g - tot_prob95
+prob95l = 1 - prob95g - tot_prob95;
 
 %% 3d sampling from R2+
 N = 10^4;
@@ -266,5 +274,7 @@ pgreat = mean(Psumfi(:,1))
 pless = mean(Psumfi(:,2))
 diff = 1 - pgreat - pless 
 
-Iplus = 2*norminv(0.975)*sqrt(pgreat*(1-pgreat)/N)
-Iminus = 2*norminv(0.975)*sqrt(pless*(1-pless)/N)
+Iplus = [pgreat - norminv(0.975)*sqrt(pgreat*(1-pgreat)/N) pgreat + norminv(0.975)*sqrt(pgreat*(1-pgreat)/N)]
+Iminus = [pless - norminv(0.975)*sqrt(pless*(1-pless)/N) pless + norminv(0.975)*sqrt(pless*(1-pless)/N)]
+
+
