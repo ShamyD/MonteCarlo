@@ -121,10 +121,10 @@ for i = 2:n
 end
 
 c_cum
-%% Q7
-N = 1000;
-n = 240;
-rep = 100;
+%% Q6
+N = 100;
+n = 150;
+rep = 10;
 cum_sums = zeros(rep, n);
 
 for i = 1:rep
@@ -136,11 +136,11 @@ end
 
 c_SISR_mean = mean(cum_sums)
 
-nvec = 1:n;
+nvec = 1:n-1;
 invnvec = 1./nvec;
-nroot_cn = c_SISR_mean.^(invnvec);
+nroot_cn = c_SISR_mean(2:n).^(invnvec);
 
-plot(1:n,nroot_cn)
+plot(1:n-1,nroot_cn)
 
 
 
