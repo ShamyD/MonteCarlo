@@ -142,6 +142,8 @@ nroot_cn = c_SISR_mean.^(invnvec);
 
 plot(1:n,nroot_cn)
 %%
+getParams(cum_sums)
+
 
 cns = cum_sums;
 log_cns = log(cns);
