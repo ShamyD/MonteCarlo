@@ -92,7 +92,6 @@ for c = 1:n
         mult = resampling(weight(:, c));
         matr = multToMatr(mult);
         walks = matr*walks;
-        N_tot = matr*N_tot;
     end
     
     % Get which free nb:s there are and how many (for all walks).
@@ -122,3 +121,26 @@ for i = 2:n
 end
 
 c_cum
+%% Q7
+N = 100;
+n = 1000;
+rep = 1000;
+cum_sums = zeros(rep, n);
+
+for i = 1:rep
+    cum_sums(i, :) = SISR_sample(N, n);
+    if mod(i, 100) == 0
+        i
+    end
+end
+
+c_SISR_mean = mean(cum_sums)
+
+nvec = 1:n;
+invnvec = 1./nvec;
+nroot_cn = c_SISR_mean.^(invnvec);
+
+plot(1:n,nroot_cn)
+
+
+
