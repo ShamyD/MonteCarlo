@@ -1,15 +1,15 @@
-function c_cum = SISR_sample(N,n)
+function c_cum = SISR_sample(N,n,d)
 
 % Generate N walks from g(x_(0:n))
-d = 2;
 walks = zeros(N,d*(n + 1));
 weight = ones(N,n+1);
-result = ones(1,n);
+
+dirs = getDirs(d);
 
     for c = 1:n
         
         % Get which free nb:s there are and how many (for all walks).
-        [free_nb, nr_free_nb] = getFreeNb(walks(:,1:d*c),N,d);
+        [free_nb, nr_free_nb] = getFreeNb(walks(:,1:d*c),N,d,dirs);
     
         % Get new point for each of the N separate walks.
         prev_col = walks(:,d*c - d + 1:d*c);
@@ -23,14 +23,10 @@ result = ones(1,n);
 %         end
     
     
-%         if c ~= 0
-            mult = resampling(weight(:, c));
-            matr = multToMatr(mult);
-            walks = matr*walks;
+        mult = resampling(weight(:, c));
+        matr = multToMatr(mult);
+        walks = matr*walks;
 %         end
-    
-   
- 
     
     end
 
