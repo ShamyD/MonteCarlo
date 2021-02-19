@@ -121,10 +121,10 @@ for i = 2:n
 end
 
 c_cum
-%% Q7
+%% Q6
 N = 100;
-n = 50;
-rep = 100;
+n = 100;
+rep = 10;
 cum_sums = zeros(rep, n);
 
 for i = 1:rep
@@ -141,6 +141,26 @@ invnvec = 1./nvec;
 nroot_cn = c_SISR_mean.^(invnvec);
 
 plot(1:n,nroot_cn)
+%% 
+
+data = load('cum_sumsN100n100rep1000');
+cns = data.cum_sums;
+log_cns = log(cns);
+lb = ceil(0.8*size(log_cns,2));
+rb = size(log_cns,2);
+
+fits = zeros(size(log_cns,1));
+
+for i=1:size(log_cns,1)
+    ifit  = polyfit(lb:rb,log_cns(i,lb:rb),1);
+    fits(i) = ifit(1);
+end
+
+mean(fits);
+
+
+
+
 
 
 
