@@ -124,12 +124,12 @@ c_cum
 %% Q7
 N = 100;
 n = 1000;
-rep = 1000;
+rep = 100;
 cum_sums = zeros(rep, n);
 
 for i = 1:rep
     cum_sums(i, :) = SISR_sample(N, n);
-    if mod(i, 100) == 0
+    if mod(i, 10) == 0
         i
     end
 end
