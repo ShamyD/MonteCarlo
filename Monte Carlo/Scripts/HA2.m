@@ -1,7 +1,4 @@
-
-
-
-% Q 3.
+%% Q 3.
 
 % Generate N walks from g(x_(0:n))
 N=10000;
@@ -149,9 +146,9 @@ plot(1:n,nroot_cn)
 getParams(cum_sums);
 
 %% Final questions
-N = 300;
+N = 1000;
 n = 30;
-rep = 20;
+rep = 30;
 dimensions = 10;
 
 cum_sums = zeros(rep, n);
