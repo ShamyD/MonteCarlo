@@ -123,8 +123,8 @@ end
 c_cum
 %% Q6
 N = 100;
-n = 100;
-d = 2;
+n = 20;
+d = 5;
 rep = 10;
 cum_sums = zeros(rep, n);
 
@@ -147,5 +147,38 @@ plot(1:n,nroot_cn)
 % plot(1:n, c_SISR_mean)
 %%
 getParams(cum_sums);
+
+%% Final questions
+N = 300;
+n = 30;
+rep = 20;
+dimensions = 10;
+
+cum_sums = zeros(rep, n);
+C_means = zeros(dimensions, n);
+
+mu_means = zeros(dimensions,1);
+mu_bounds = zeros(dimensions, rep);
+
+gamma_means = zeros(dimensions,1);
+
+A_means = zeros(dimensions,1);
+A_bounds = zeros(dimensions, rep);
+
+%Loop over all dimensions tested
+for d = 1:dimensions
+    cum_sums = SISR_sampling(N, n, d, rep);
+    C_means(d, :) = mean(cum_sums,1);
+    [mu, gamma, A] = getParams(cum_sums);
+    
+    mu_means(d,1) = mean(mu,1);
+    mu_bounds(d, :) = checkBounds(mu,d, 2*d-1)';
+    
+    gamma_means(d,1) = mean(gamma,1);
+    
+    A_means(d,1) = mean(A,1);
+    A_bounds(d,:) = A>=1';
+    
+end
 
 

@@ -12,7 +12,7 @@ function [mu_d,gamma_d, A_d] = getParams(cns)
         ifit  = polyfit(lb:rb,log_cns(i,lb:rb),1);
         log_mud(i) = ifit(1);
     end
-    mu_d = exp(log_mud)
+    mu_d = exp(log_mud);
     m_fits = mean(mu_d);
 
     % form f_n = log(A_d) + (gamma_d - 1)log(n)
@@ -27,8 +27,8 @@ function [mu_d,gamma_d, A_d] = getParams(cns)
         log_Ad(i) = ifit(2);
     end
 
-    gamma_d
-    A_d = exp(log_Ad)
+    gamma_d;
+    A_d = exp(log_Ad);
 
 end
 
