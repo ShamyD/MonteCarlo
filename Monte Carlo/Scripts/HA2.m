@@ -54,8 +54,8 @@ title('Naive approach to simulating RW:s')
 
 
 % Generate N walks from g(x_(0:n))
-N=10000;
-n = 10;
+N=1000;
+n = 20;
 d = 2;
 walks = zeros(N,d*(n + 1));
 N_tot = ones(N,n);
@@ -90,61 +90,16 @@ end
 result = sum(G,1)/N
 
 %Plot.
-% semilogy(0:n,cns)
-% xlabel('Steps (n)')
-% ylabel('Nr of self-avoiding walks, c_n')
-% title('Naive approach to simulating RW:s')
+semilogy(1:n,result)
+xlabel('Steps (n)')
+ylabel('Nr of self-avoiding walks, c_n')
+title('Only self-avoiding RW:s generated')
 
-%% Q.5
-
-% Generate N walks from g(x_(0:n))
-N=10000;
-n = 10;
+%% Q5 and onwards
+N = 1000;
+n = 20;
 d = 2;
-walks = zeros(N,d*(n + 1));
-weight = 4*ones(N,n);
-result = ones(1,n);
-
-for c = 1:n
-    
-    if c ~= 0
-        mult = resampling(weight(:, c));
-        matr = multToMatr(mult);
-        walks = matr*walks;
-    end
-    
-    % Get which free nb:s there are and how many (for all walks).
-    [free_nb, nr_free_nb] = getFreeNb(walks(:,1:d*c),N,d);
-    
-    % Get new point for each of the N separate walks.
-    prev_col = walks(:,d*c - d + 1:d*c);
-    new_col = getFreeStep(N,d,prev_col, free_nb, nr_free_nb);
-    walks(:,d*c + 1:d*c + d) = new_col;
-    
-    % calculate weights
-    %N_tot(:, c) = nr_free_nb;
-    if c>1
-        weight(:,c) = nr_free_nb;
-    end
-    
- 
-    
-end
-
-result = sum(weight,1)/N;
-
-c_cum = ones(1, n);
-c_cum(1,1) = result(1,1);
-for i = 2:n
-    c_cum(1,i) = c_cum(1,i-1)*result(1,i);
-end
-
-c_cum
-%% Q6
-N = 100;
-n = 50;
-d = 3;
-rep = 10;
+rep = 1;
 cum_sums = zeros(rep, n);
 
 for i = 1:rep
@@ -154,14 +109,15 @@ for i = 1:rep
     end
 end
 
-c_SISR_mean = mean(cum_sums)
+c_SISR_mean = mean(cum_sums,1)
 
-nvec = 1:n;
-invnvec = 1./nvec;
-nroot_cn = c_SISR_mean.^(invnvec);
 
-figure(1);
-plot(1:n,nroot_cn)
+%Plot.
+semilogy(1:n,c_SISR_mean)
+xlabel('Steps (n)')
+ylabel('Nr of self-avoiding walks, c_n')
+title('SISR approach')
+
 % figure(2);
 % plot(1:n, c_SISR_mean)
 %%
