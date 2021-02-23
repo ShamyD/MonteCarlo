@@ -1,8 +1,8 @@
 %% Q 3.
-
+%%VI MÅSTE KOMMENTERA KODEN BÄTTRE
 % Generate N walks from g(x_(0:n))
 N=10000;
-n=10;
+n=20;
 d = 2;
 walks = zeros(N,d*(n + 1));
 sa = zeros(N,n+1);
@@ -119,9 +119,9 @@ end
 
 c_cum
 %% Q6
-N = 100;
+N = 1000;
 n = 20;
-d = 5;
+d = 2;
 rep = 10;
 cum_sums = zeros(rep, n);
 
@@ -178,4 +178,15 @@ for d = 1:dimensions
     
 end
 
+%% Plots for final questions
+mu_as = @(x) 2*x - 1 - 1/(2*d) - 3/(2*d)^2 - 16/(2*d)^3; 
+
+figure(1)
+plot(5:dimensions, mu_means(5:end))
+hold on
+plot(5:dimensions, mu_as(5:dimensions))
+legend('Estimated connective constant', 'Asymptotic connective constant', 'Location', 'northwest')
+title('Estimation of \mu_d compared to asymptotic bound')
+xlabel('dimension d')
+ylabel('connective constant \mu_d')
 
