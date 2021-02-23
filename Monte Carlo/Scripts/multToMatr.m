@@ -4,7 +4,7 @@ function matr = multToMatr(mult)
     % Takes in the multiplicity mult, which says how many should
     %survive.
     
-    %If first walk should have 0 copies second row 2, and third row 1
+    %If first walk should have 0 copies, second row 2, and third row 1
     % copy matrix would start like this:
     
     %[ 0  1  0  0 ...

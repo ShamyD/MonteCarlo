@@ -45,10 +45,10 @@ cns = fracerino.*Narray
 
 
 %Plot.
-semilogy(cns)
+semilogy(0:n,cns)
 xlabel('Steps (n)')
-ylabel('c_n')
-title('Question 3.')
+ylabel('Nr of self-avoiding walks, c_n')
+title('Naive approach to simulating RW:s')
 
 %% Q 4
 
@@ -63,11 +63,13 @@ G = 4*ones(N,n);
 result = ones(1,n);
 
 for c = 1:n
+    
+    prev_col = walks(:,d*c - d + 1:d*c);
+    
     % Get which free nb:s there are and how many (for all walks).
     [free_nb, nr_free_nb] = getFreeNb(walks(:,1:d*c),N,d);
     
     % Get new point for each of the N separate walks.
-    prev_col = walks(:,d*c - d + 1:d*c);
     new_col = getFreeStep(N,d,prev_col, free_nb, nr_free_nb);
     walks(:,d*c + 1:d*c + d) = new_col;
     
@@ -85,6 +87,11 @@ end
 
 result = sum(G,1)/N
 
+%Plot.
+% semilogy(0:n,cns)
+% xlabel('Steps (n)')
+% ylabel('Nr of self-avoiding walks, c_n')
+% title('Naive approach to simulating RW:s')
 
 %% Q.5
 
