@@ -2,6 +2,7 @@ function c_cum = SISR_sample(N,n,d)
 
 % Generate N walks from g(x_(0:n))
 walks = zeros(N,d*(n + 1));
+%Store weights.
 weight = ones(N,n+1);
 
 dirs = getDirs(d);
@@ -17,21 +18,19 @@ dirs = getDirs(d);
         walks(:,d*c + 1:d*c + d) = new_col;
         
         % calculate weights
-        %N_tot(:, c) = nr_free_nb;
-%       if c>1
         weight(:,c+1) = nr_free_nb;
-%         end
     
-    
+        %Resample walks with help of weights.
         mult = resampling(weight(:, c));
         matr = multToMatr(mult);
         walks = matr*walks;
-%         end
     
     end
-
+    
+    % Average weights for each length between 1:n.
     result = sum(weight,1)/N;
 
+    % Create c_sisr sample for n between 1:n.
     c_cum = ones(1, n + 1);
     c_cum(1,1) = result(1,1);
     for i = 2:n + 1

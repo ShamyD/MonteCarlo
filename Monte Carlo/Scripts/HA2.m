@@ -1,19 +1,23 @@
-%% Q 3.
-%%VI MÅSTE KOMMENTERA KODEN BÄTTRE
+
+
+
+% Q 3.
+
 % Generate N walks from g(x_(0:n))
-N=10000;
+N=1000;
 n=20;
 d = 2;
 walks = zeros(N,d*(n + 1));
 sa = zeros(N,n+1);
 
 for c = 1:n
-    
+    % Generate new points.
     prev_col = walks(:,2*c - 1:2*c);
     new_col = getNewStep(N,d) + prev_col;
     walks(:,d*c + 1:d*c + d) = new_col;
     
-    
+    %Loop over previous points to see which have already been
+    %visited.
     memTot = zeros(N,c);
     for i=1:c
         old_col = walks(:, d*i - d + 1:d*i);
@@ -31,11 +35,20 @@ for j=4:n+1
     sa_count(:,j) = sa_count(:,j-1) + sa(:,j);
 end
 
+% Sum up number of self-avoiding walks Nsa for n=1:n.
 Nsa = sum(sa_count==0);
 
+% Estimate c_n:s from Nsa.
 fracerino = Nsa / N;
 Narray = 4.^(linspace(0,n,n+1));
 cns = fracerino.*Narray
+
+
+%Plot.
+semilogy(0:n,cns)
+xlabel('Steps (n)')
+ylabel('Nr of self-avoiding walks, c_n')
+title('Naive approach to simulating RW:s')
 
 %% Q 4
 
@@ -48,10 +61,14 @@ walks = zeros(N,d*(n + 1));
 N_tot = ones(N,n);
 G = 4*ones(N,n);
 result = ones(1,n);
+dirs = getDirs(d);
 
 for c = 1:n
+    
+    
+    
     % Get which free nb:s there are and how many (for all walks).
-    [free_nb, nr_free_nb] = getFreeNb(walks(:,1:d*c),N,d);
+    [free_nb, nr_free_nb] = getFreeNb(walks(:,1:d*c),N,d,dirs);
     
     % Get new point for each of the N separate walks.
     prev_col = walks(:,d*c - d + 1:d*c);
@@ -72,6 +89,11 @@ end
 
 result = sum(G,1)/N
 
+%Plot.
+% semilogy(0:n,cns)
+% xlabel('Steps (n)')
+% ylabel('Nr of self-avoiding walks, c_n')
+% title('Naive approach to simulating RW:s')
 
 %% Q.5
 
@@ -119,9 +141,9 @@ end
 
 c_cum
 %% Q6
-N = 1000;
-n = 20;
-d = 2;
+N = 100;
+n = 50;
+d = 3;
 rep = 10;
 cum_sums = zeros(rep, n);
 
