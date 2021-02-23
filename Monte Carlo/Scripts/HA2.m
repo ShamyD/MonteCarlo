@@ -156,4 +156,14 @@ for d = 1:dimensions
     
 end
 
+%% Plots for final questions
+mu_as = @(x) 2*x - 1 - 1/(2*d) - 3/(2*d)^2 - 16/(2*d)^3; 
 
+figure(1)
+plot(5:dimensions, mu_means(5:end))
+hold on
+plot(5:dimensions, mu_as(5:dimensions))
+legend('Estimated connective constant', 'Asymptotic connective constant', 'Location', 'northwest')
+title('Estimation of \mu_d compared to asymptotic bound')
+xlabel('dimension d')
+ylabel('connective constant \mu_d')
