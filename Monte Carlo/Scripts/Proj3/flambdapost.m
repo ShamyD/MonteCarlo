@@ -6,7 +6,7 @@ function lambda_post = flambdapost(d, theta, t, ni)
     lambda_post = zeros(1,d);
     
     for i =1:d
-        lambda_post(i) = gamrnd(ni(i) + 2,t(i+1)-t(i) + theta);
+        lambda_post(i) = gamrnd(ni(i) + 2,1/(t(i+1)-t(i) + theta));
     end
 end
 
