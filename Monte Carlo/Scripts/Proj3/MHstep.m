@@ -1,4 +1,4 @@
-function tnext = MHstep(t_prev, rho, fstat) %input conditional params
+function tnext = MHstep(t_prev, rho, tau) %input conditional params
     
     %Draw X*
     [tstar, pdf] = rwp(t_prev, rho);
