@@ -1,8 +1,22 @@
-function tstar = MHstep(t_matr, rho, fstat, prevPdf)
-    t_prev = t_matr(end, :)
-    [tstar, pdf] = rwp(t_prev, rho)
+function tnext = MHstep(t_prev, rho, fstat)
+    
+    %Draw X*
+    [tstar, pdf] = rwp(t_prev, rho);
+    prevPdf = prevpdf(t_prev, tstar, rho);
+    
+    if tstar(1) ~= t_prev(1) || tstar(end) ~= t_prev(end)
+        prevPdf = 0;
+    end
     
     %Does this step have to be logged?
-    alpha = min(1, fstat(tstar)*prevPdf/(fstat(t_pre)))
+    logExpression = log(fstat(tstar)*prevPdf)-log(fstat(t_prev))-log(pdf);
+    alpha = min(1, exp(logExpression));
+    U = rand;
+    
+    if U <= alpha
+        tnext = tstar;
+    else
+        tnext = t_prev;
+    end
     
 end

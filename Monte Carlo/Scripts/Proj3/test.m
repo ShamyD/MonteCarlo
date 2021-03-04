@@ -13,6 +13,8 @@ t=zeros(N, d+1);
 t(:,1) = t1;
 t(:,end) = td1;
 
+
+
 %%
     a = zeros(10^3, 4);
     for i=1:10^3

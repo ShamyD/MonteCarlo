@@ -6,7 +6,10 @@ function [candidate, pdf] = rwp(t_prev, rho)
     d2 = diag(ones(len_t, 1), -2);
     matr = d1(:,1:end-2) + d2(1:end-2,1:end-4);
     R = t_prev*matr*rho;
+    
     candidate = t_prev(2:end-1) + (rand(1,len_t-2)-0.5)*2.*R;
     candidate = [t_prev(1),candidate, t_prev(end)];
+    candidate = sort(candidate, 2);
+    
     pdf = 1/prod(2*R);
 end
