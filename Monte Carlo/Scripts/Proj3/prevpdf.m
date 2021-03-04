@@ -12,7 +12,7 @@ function pdf = prevpdf(t_prev, tstar, rho)
 %   
     logic1 = interval(2,:) <= t_prev(2:end-1);
     logic2 = interval(1,:) >= t_prev(2:end-1);
-    logic = logic1.*logic2
+    logic = logic1.*logic2;
     
     
     
