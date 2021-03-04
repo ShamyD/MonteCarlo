@@ -1,5 +1,4 @@
 function [t_posterior] = ftpost(t, lambda, ni)
-    '-------'
     % Evaluate posterior of t given lambda, theta and theta.
     
     endpoints_interval = t(2:end);
@@ -9,10 +8,11 @@ function [t_posterior] = ftpost(t, lambda, ni)
     lambda_interval_sizes = lambda .* interval_sizes;
     sum_lambda_interval_sizes = sum(lambda_interval_sizes);
     
-    prod_lambdai_to_ni = prod(lambda .^ni);
+
+    prod_lambdai_to_ni = sum(ni.*log(lambda));
     
-    ft_prior = prod(interval_sizes);
+    ft_prior = sum(log((interval_sizes)));
     
-    t_posterior = exp(-sum_lambda_interval_sizes)*prod_lambdai_to_ni*ft_prior;
+    t_posterior = -sum_lambda_interval_sizes + prod_lambdai_to_ni + ft_prior;
 end
 
