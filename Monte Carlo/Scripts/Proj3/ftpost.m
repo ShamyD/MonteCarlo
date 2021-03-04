@@ -1,4 +1,4 @@
-function [t_posterior] = ftpost(t, lambda)
+function [t_posterior] = ftpost(t, lambda, ni)
     
     % Evaluate posterior of t given lambda, theta and theta.
     
