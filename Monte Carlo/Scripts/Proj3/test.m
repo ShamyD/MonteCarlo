@@ -1,4 +1,5 @@
-load('C:\Users\elias\Matlag\MonteCarlo\Monte Carlo\Data\coal_mine_disasters.mat')
+% load('C:\Users\elias\Matlag\MonteCarlo\Monte Carlo\Data\coal_mine_disasters.mat')
+load('C:\Users\Seamu\MATLAB\Projects\MonteCarlo\Monte Carlo\Data\coal_mine_disasters.mat')
 plot(T(1:751), 1:751)
 %%
 burninfact = 1.2;
@@ -39,8 +40,34 @@ for i = 2:N
     
 end
 
-nmbrBlocks = N_real/200;
+%% Produce blocks and remove burn in
 
+start = ceil(N_real*(burninfact-1));
+theta = theta(start:end, :);
+lambda = lambda(start:end, :);
+t = t(start:end, :);
+
+nmbrBlocks = max(N_real/200, 5);
+
+lambdaBlocks = blockify(lambda, nmbrBlocks);
+thetaBlocks = blockify(theta, nmbrBlocks);
+tBlocks = blockify(t, nmbrBlocks);
+
+%%
+figure(1)
+for i = 1:d
+    plot(1:nmbrBlocks, lambdaBlocks(:, i))
+    hold on
+end
+
+figure(2)
+for i = 1:d+1
+    plot(1:nmbrBlocks, tBlocks(:, i))
+    hold on
+end
+
+figure(3)
+plot(1:nmbrBlocks, thetaBlocks)
 
 %%
     a = zeros(10^3, 4);
