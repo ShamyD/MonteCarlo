@@ -2,11 +2,11 @@ load('C:\Users\elias\Matlag\MonteCarlo\Monte Carlo\Data\coal_mine_disasters.mat'
 plot(T(1:751), 1:751)
 %%
 burninfact = 1.2;
-N_real = 10^6;
+N_real = 10^4;
 N = N_real*burninfact; % count in burn in time
 
 d =10;%number of intervals
-rho = 0.002;
+rho = 0.009;
 Phi = 0.5;
 tau = T';
 
@@ -50,10 +50,15 @@ nmbrBlocks = N_real/200;
     mean(a)
     
 %%
-
-mean_lamba = mean(lambda(N_real*(burninfact-1):end,:),1)
+plot(T(1:751), 1:751)
+hold on
+mean_lambda = mean(lambda(N_real*(burninfact-1):end,:),1)
 mean_t = mean(t(N_real*(burninfact-1):end,:),1)
 
 
-
+for i=1:d
+    xline(mean_t(i), '--black', {['i=' num2str(i) '     ' 'lambda=' num2str(mean_lambda(i))]});
+    
+    % Polyfit
+end
 
