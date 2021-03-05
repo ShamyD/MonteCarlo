@@ -39,6 +39,8 @@ for i = 2:N
     
 end
 
+nmbrBlocks = N_real/200;
+
 
 %%
     a = zeros(10^3, 4);

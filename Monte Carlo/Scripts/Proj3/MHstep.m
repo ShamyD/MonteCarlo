@@ -2,14 +2,14 @@ function [tnext, niNext,sum_rej] = MHstep(t_prev, rho, tau, lambdaPrev, ni, sum_
     
     %Draw X*
     [tstar, pdf] = rwp(t_prev, rho);
-    prevPdf = prevpdf(t_prev, tstar, rho);
+    prevPdf = prevpdf(t_prev, tstar, rho); %Ändra
     niStar = create_ni(tau,tstar);
     
     %Trick to make sure that if the outer boundaries are passed the 
     %suggestion will be rejected
     
     if tstar(1) ~= 1658 || tstar(end) ~= 1980
-        prevPdf = 0;
+        prevPdf = 0; %%inkludera i ftpost
     end
     
     %Calculation of alpha4
