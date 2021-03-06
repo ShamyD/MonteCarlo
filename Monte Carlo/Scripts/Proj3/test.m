@@ -86,8 +86,23 @@ end
 % similar.
 % - Make grid of time and generate mean of lambdas for each gridpoint.
 
+%%
+% Plot using time-grid.
+size = 1;
+grid = 1658:size:1980;
+inner_grid_points = (1980-1658)/size - 1;
+lambda_for_grid = zeros(N_real,inner_grid_points);
 
+lambda_wo_burnin = lambda(N-N_real:end,:);
+t_wo_burnin = t(N-N_real:end,:);
 
+for i=1:N_real
+    lambda_for_grid(i,:) = lambda_for_tp(lambda_wo_burnin(i,:),d,t_wo_burnin(i,:), grid);
+end
+
+lambda_mean = mean(lambda_for_grid,1);
+
+plot(grid(2:end-1), lambda_mean)
 
 
 
