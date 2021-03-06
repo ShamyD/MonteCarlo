@@ -2,7 +2,7 @@ function [blockedMatrix] = blockify(matrix,nbrBlocks)
     
     s = size(matrix);
     blockedMatrix = zeros(nbrBlocks, s(2));
-    lenB = floor(s(1)/nbrBlocks)
+    lenB = floor(s(1)/nbrBlocks);
     
     for i = 1:nbrBlocks
         top = i*lenB;
