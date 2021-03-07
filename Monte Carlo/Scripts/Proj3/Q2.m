@@ -3,7 +3,6 @@
 load('C:\Users\elias\Matlag\MonteCarlo\Monte Carlo\Data\atlantic.txt')
 
 %%
-
 [beta, mu] = est_gumbel(atlantic);
 B = 200;
 n = size(atlantic,1);
@@ -38,7 +37,3 @@ mu_conf = [mu - mu_diff(floor((1-alpha/2)*B)), mu - mu_diff(ceil(alpha/2*B))]
 beta_conf = [beta - beta_diff(floor((1-alpha/2)*B)), beta - beta_diff(ceil(alpha/2*B))]
 
 F_inv_T_conf = F_inv_T - F_inv_T_diff(floor((1-alpha)*B))
-
-
-
-
