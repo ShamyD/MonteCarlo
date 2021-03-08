@@ -44,11 +44,11 @@ end
 %% Produce blocks and remove burn in
 rho = 0.0055;
 Phi = 3;
-N = 10^4;
-d = 6;
+N = 10^5;
+d = 5;
 
 [theta, lambda, t] = hybridSampler(N, d, rho, Phi, tau);
-nmbrBlocks = max(N/100, 5);
+nmbrBlocks = max(N/1000, 5);
 
 lambdaBlocks = blockify(lambda, nmbrBlocks);
 thetaBlocks = blockify(theta, nmbrBlocks);
@@ -91,9 +91,9 @@ ylabel('Parameter \theta')
 title('Parameter \theta for different blocks')    
 
 figure(4)
-plot(autocorr(thetaBlocks(:,1)))
+plot(acf(tBlocks(:,4), 20))
 hold on
-plot(autocorr(theta(:,1)))
+plot(acf(t(:,4), 20))
 legend('block', 'nonBlock')
 %%
 plot(T(1:751), 1:751)

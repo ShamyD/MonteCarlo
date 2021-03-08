@@ -9,7 +9,7 @@ function [theta,lambda, t] = hybridSampler(N_real,d, rho, Phi, tau)
     ni = create_ni(tau, t(1,:));
 
     lambda = zeros(N, d);
-    lambda(1,:) = 1;
+    lambda(1,:) = 1*300;
 
     theta = zeros(N,1);
     theta(1) = 1;
