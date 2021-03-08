@@ -41,8 +41,8 @@ for i = 2:N
     
 end
 
-%% Produce Markov-chain, blocks and remove burn in
-rho = 0.0001;
+%% Produce blocks and remove burn in
+rho = 0.0055;
 Phi = 3;
 N = 10^4;
 d = 10;
@@ -92,9 +92,9 @@ ylabel('Parameter \theta')
 title('Parameter \theta for different blocks')    
 
 figure(4)
-plot(var(tBlocks(:,7))*autocorr(tBlocks(:,7))
+plot(autocorr(tBlocks(:,2)))
 hold on
-plot(var(t(:,7))*autocorr(t(:,7)))
+plot(autocorr(t(:,2)))
 legend('block', 'nonBlock')
 %%
 plot(T(1:751), 1:751)
