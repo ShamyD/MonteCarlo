@@ -1,5 +1,5 @@
-% load('C:\Users\elias\Matlag\MonteCarlo\Monte Carlo\Data\coal_mine_disasters.mat')
-load('C:\Users\Seamu\MATLAB\Projects\MonteCarlo\Monte Carlo\Data\coal_mine_disasters.mat')
+load('C:\Users\elias\Matlag\MonteCarlo\Monte Carlo\Data\coal_mine_disasters.mat')
+%load('C:\Users\Seamu\MATLAB\Projects\MonteCarlo\Monte Carlo\Data\coal_mine_disasters.mat')
 plot(T(1:751), 1:751)
 tau = T';
 %% Hybrid sampler - now replaced with function
@@ -41,11 +41,11 @@ for i = 2:N
     
 end
 
-%% Produce blocks and remove burn in
-rho = 0.0055;
+%% Produce Markov-chain, blocks and remove burn in
+rho = 0.0001;
 Phi = 3;
 N = 10^4;
-d = 6;
+d = 10;
 
 [theta, lambda, t] = hybridSampler(N, d, rho, Phi, tau);
 nmbrBlocks = max(N/100, 5);
@@ -53,6 +53,7 @@ nmbrBlocks = max(N/100, 5);
 lambdaBlocks = blockify(lambda, nmbrBlocks);
 thetaBlocks = blockify(theta, nmbrBlocks);
 tBlocks = blockify(t, nmbrBlocks);
+
 
 lambdaVar = var(lambdaBlocks)
 thetaVar = var(thetaBlocks)
@@ -91,15 +92,15 @@ ylabel('Parameter \theta')
 title('Parameter \theta for different blocks')    
 
 figure(4)
-plot(autocorr(thetaBlocks(:,1)))
+plot(var(tBlocks(:,7))*autocorr(tBlocks(:,7))
 hold on
-plot(autocorr(theta(:,1)))
+plot(var(t(:,7))*autocorr(t(:,7)))
 legend('block', 'nonBlock')
 %%
 plot(T(1:751), 1:751)
 hold on
-mean_lambda = mean(lambda(N_real*(burninfact-1):end,:),1)
-mean_t = mean(t(N_real*(burninfact-1):end,:),1)
+mean_lambda = mean(lambda,1)
+mean_t = mean(t,1)
 
 
 for i=1:d
@@ -117,13 +118,13 @@ end
 size = 1;
 grid = 1658:size:1980;
 inner_grid_points = (1980-1658)/size - 1;
-lambda_for_grid = zeros(N_real,inner_grid_points);
+lambda_for_grid = zeros(N,inner_grid_points);
+% 
+% lambda_wo_burnin = lambda(N-N_real:end,:);
+% t_wo_burnin = t(N-N_real:end,:);
 
-lambda_wo_burnin = lambda(N-N_real:end,:);
-t_wo_burnin = t(N-N_real:end,:);
-
-for i=1:N_real
-    lambda_for_grid(i,:) = lambda_for_tp(lambda_wo_burnin(i,:),d,t_wo_burnin(i,:), grid);
+for i=1:N
+    lambda_for_grid(i,:) = lambda_for_tp(lambda(i,:),d,t(i,:), grid);
 end
 
 lambda_mean = mean(lambda_for_grid,1);
