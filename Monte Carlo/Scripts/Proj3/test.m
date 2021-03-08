@@ -106,3 +106,6 @@ plot(grid(2:end-1), lambda_mean)
 
 
 
+
+
+

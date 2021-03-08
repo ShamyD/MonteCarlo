@@ -91,9 +91,9 @@ ylabel('Parameter \theta')
 title('Parameter \theta for different blocks')    
 
 figure(4)
-plot(acf(tBlocks(:,4), 20))
+plot(autocorr(tBlocks(:,2)))
 hold on
-plot(acf(t(:,4), 20))
+plot(autocorr(t(:,2)))
 legend('block', 'nonBlock')
 %%
 plot(T(1:751), 1:751)
