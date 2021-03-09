@@ -28,7 +28,9 @@ function [theta,lambda, t] = hybridSampler(N_real,d, rho, Phi, tau)
         t(i, :) = tnext;
         theta(i,:) = thetaStep;
         lambda(i,:) = lambdaStep; 
-
+        if i == floor(N_real*(burninfact-1))
+            sum_rej = 0;
+        end
     end
 rej_rate = sum_rej/N % Should be rougly 70%   
    

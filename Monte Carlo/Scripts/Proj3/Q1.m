@@ -1,6 +1,9 @@
 % load('C:\Users\elias\Matlag\MonteCarlo\Monte Carlo\Data\coal_mine_disasters.mat')
 load('C:\Users\Seamu\MATLAB\Projects\MonteCarlo\Monte Carlo\Data\coal_mine_disasters.mat')
 plot(T(1:751), 1:751)
+xlabel('year')
+ylabel('Number of disasters since 1658')
+title('Coal mine disasters between 1658 and 1980') 
 tau = T';
 %% Hybrid sampler - now replaced with function
 burninfact = 1.2;
@@ -43,9 +46,9 @@ end
 
 %% Produce blocks and remove burn in
 rho = 0.0055;
-Phi = 3;
+Phi = 200;
 N = 10^5;
-d = 5;
+d = 4;
 
 [theta, lambda, t] = hybridSampler(N, d, rho, Phi, tau);
 nmbrBlocks = max(N/1000, 5);
@@ -55,8 +58,11 @@ thetaBlocks = blockify(theta, nmbrBlocks);
 tBlocks = blockify(t, nmbrBlocks);
 
 lambdaVar = var(lambdaBlocks)
+lambdaMean = mean(lambdaBlocks,1)
 thetaVar = var(thetaBlocks)
-varT = var(tBlocks)
+thetaMean = mean(thetaBlocks, 1)
+tVar = var(tBlocks)
+tMean = mean(tBlocks,1)
 %%
 [~,d] = size(lambdaBlocks);
 
@@ -132,8 +138,102 @@ plot(grid(2:end-1), lambda_mean)
 
 
 
+%% Produce plots for different rho:s
+
+rhoBold = 0.07;
+rhoReg = 0.0055;
+rhoCaut = 0.0005;
+Phi = 3;
+N = 10^5;
+d = 4;
+
+nmbrBlocks = max(N/1000, 5);
+
+[theta, lambda, t] = hybridSampler(N, d, rhoBold, Phi, tau);
+
+lambdaBlocksBold = blockify(lambda, nmbrBlocks);
+thetaBlocksBold = blockify(theta, nmbrBlocks);
+tBlocksBold = blockify(t, nmbrBlocks);
+
+[theta, lambda, t] = hybridSampler(N, d, rhoReg, Phi, tau);
+
+lambdaBlocksReg = blockify(lambda, nmbrBlocks);
+thetaBlocksReg = blockify(theta, nmbrBlocks);
+tBlocksReg = blockify(t, nmbrBlocks);
+
+[theta, lambda, t] = hybridSampler(N, d, rhoCaut, Phi, tau);
+
+lambdaBlocksCaut = blockify(lambda, nmbrBlocks);
+thetaBlocksCaut = blockify(theta, nmbrBlocks);
+tBlocksCaut = blockify(t, nmbrBlocks);
+
+%Results for each rho
+lambdaVarBold = var(lambdaBlocksBold);
+lambdaMeanBold = mean(lambdaBlocksBold,1);
+thetaVarBold = var(thetaBlocksBold);
+thetaMeanBold = mean(thetaBlocksBold, 1);
+tVarBold = var(tBlocksBold);
+tMeanBold = mean(tBlocksBold,1);
+
+lambdaVarReg = var(lambdaBlocksReg);
+lambdaMeanReg = mean(lambdaBlocksReg,1);
+thetaVarReg = var(thetaBlocksReg);
+thetaMeanReg = mean(thetaBlocksReg, 1);
+tVarReg = var(tBlocksReg);
+tMeanReg = mean(tBlocksReg,1);
+
+lambdaVarCaut = var(lambdaBlocksCaut);
+lambdaMeanCaut = mean(lambdaBlocksCaut,1);
+thetaVarCaut = var(thetaBlocksCaut);
+thetaMeanCaut = mean(thetaBlocksCaut, 1);
+tVarCaut = var(tBlocksCaut);
+tMeanCaut = mean(tBlocksCaut,1);
+
+%%
+[~,d] = size(lambdaBlocks);
 
 
+figure(3)
+plot(1:nmbrBlocks, thetaBlocks)
+xlabel('Block b')
+ylabel('Parameter \theta')
+title('Parameter \theta for different blocks')    
 
+%%
 
+plot(autocorr(tBlocksBold(:,3)))
+hold on
+plot(autocorr(tBlocksReg(:,3)))
+hold on
+plot(autocorr(tBlocksCaut(:,3)))
+legend('Bold', 'Regular', 'Cautious')
+xlabel('Block difference (l)')
+ylabel('Auttocorrelation \rho(l)')
+title('Autocorrelation of t3 for Block differences l ')    
 
+%%
+
+tLegend = cell([1 d+1]);
+for i = 1:d+1
+    tLegend{i} = append('t', int2str(i));
+end
+
+figure(2)
+plot(1:nmbrBlocks, tBlocksCaut)
+xlabel('Block b')
+ylabel('breakpoint t')
+title('Breakpoints t for different blocks, for cautious choice of \rho')
+legend(tLegend, 'Location', 'northwest')
+
+%%
+lambdaLegend = cell([1 d]);
+for i = 1:d
+    lambdaLegend{i} = append('\lambda', int2str(i));
+end
+
+figure(1)
+plot(1:nmbrBlocks, lambdaBlocksCaut)
+xlabel('Block b')
+ylabel('Intensity \lambda')
+title('Intensities \lambda for different blocks with cautious choice of \rho')
+legend(lambdaLegend, 'Location', 'northwest')
