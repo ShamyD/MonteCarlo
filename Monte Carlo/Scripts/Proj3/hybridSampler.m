@@ -1,6 +1,7 @@
 function [theta,lambda, t] = hybridSampler(N_real,d, rho, Phi, tau)
     burninfact = 1.2;
     N = N_real*burninfact; % count in burn in time
+    burn_in_samps = N - N_real;
 
     t1 = 1658;
     td1 = 1980;
@@ -22,7 +23,7 @@ function [theta,lambda, t] = hybridSampler(N_real,d, rho, Phi, tau)
         tprev = t(i-1, :);
         lambdaPrev = lambda(i-1, :);
 
-        [tnext, ni, sum_rej] = MHstep(tprev, rho, tau, lambdaPrev, ni, sum_rej, i);
+        [tnext, ni, sum_rej] = MHstep(tprev, rho, tau, lambdaPrev, ni, sum_rej, i, burn_in_samps);
         [thetaStep, lambdaStep] = Gstep(lambdaPrev, ni, tnext, Phi, d);
 
         t(i, :) = tnext;
@@ -30,7 +31,7 @@ function [theta,lambda, t] = hybridSampler(N_real,d, rho, Phi, tau)
         lambda(i,:) = lambdaStep; 
 
     end
-rej_rate = sum_rej/N % Should be rougly 70%   
+rej_rate = sum_rej/N_real % Should be rougly 70%   
    
 start = ceil(N_real*(burninfact-1));
 theta = theta(start:end, :);

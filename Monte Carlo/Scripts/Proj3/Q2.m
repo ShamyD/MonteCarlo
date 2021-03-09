@@ -4,7 +4,7 @@ load('C:\Users\elias\Matlag\MonteCarlo\Monte Carlo\Data\atlantic.txt')
 
 %%
 
-[beta, mu] = est_gumbel(atlantic);
+[beta, mu] = est_gumbel(atlantic)
 B = 200;
 n = size(atlantic,1);
 r = rand(B,n);
@@ -14,7 +14,7 @@ beta_star = zeros(B,1);
 
 F_inv_T_star = zeros(B,1);
 T = 3*14*100;
-F_inv_T = gumb_inv(mu, beta, (1-1/T));
+F_inv_T = gumb_inv(mu, beta, (1-1/T))
 
 
 for i=1:B
@@ -34,10 +34,10 @@ F_inv_T_diff = sort(F_inv_T_star - F_inv_T);
 
 alpha = 0.05;
 
-mu_conf = [mu - mu_diff(floor((1-alpha/2)*B)), mu - mu_diff(ceil(alpha/2*B))]
-beta_conf = [beta - beta_diff(floor((1-alpha/2)*B)), beta - beta_diff(ceil(alpha/2*B))]
+mu_conf = [mu - mu_diff(ceil((1-alpha/2)*B)), mu - mu_diff(floor(alpha/2*B))]
+beta_conf = [beta - beta_diff(ceil((1-alpha/2)*B)), beta - beta_diff(floor(alpha/2*B))]
 
-F_inv_T_conf = F_inv_T - F_inv_T_diff(floor((1-alpha)*B))
+F_inv_T_conf = F_inv_T - F_inv_T_diff(ceil((1-alpha)*B))
 
 
 

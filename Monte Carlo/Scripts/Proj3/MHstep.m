@@ -1,4 +1,4 @@
-function [tnext, niNext,sum_rej] = MHstep(t_prev, rho, tau, lambdaPrev, ni, sum_rej, i) %input conditional params
+function [tnext, niNext,sum_rej] = MHstep(t_prev, rho, tau, lambdaPrev, ni, sum_rej, i, burn_in_samps) %input conditional params
     
     %Draw X*
     [tstar, pdf, rev_pdf] = rwp(t_prev, rho);
@@ -14,11 +14,12 @@ function [tnext, niNext,sum_rej] = MHstep(t_prev, rho, tau, lambdaPrev, ni, sum_
     if U <= alpha
         tnext = tstar;
         niNext = niStar;
-        i;
     else
         tnext = t_prev;
         niNext = ni;
-        sum_rej = sum_rej + 1;
+        if i > burn_in_samps
+            sum_rej = sum_rej + 1;
+        end
     end
     
 end
